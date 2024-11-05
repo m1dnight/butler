@@ -60,7 +60,9 @@ defmodule Butler.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:ecto_sqlite3, "~> 0.16"},
-      {:env_config, path: "../env_config"}
+      {:env_config, git: "https://github.com/m1dnight/env_config.git"},
+      {:exirc, "~> 2.0"},
+      {:typed_struct, "~> 0.3.0"}
     ]
   end
 

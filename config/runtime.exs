@@ -25,6 +25,26 @@ config :butler, ButlerWeb.Endpoint, server: phx_server
 
 if config_env() == :prod do
   # ----------------------------------------------------------------------------
+  # Butler
+
+  env_var(nickname, "NICKNAME", :string, [min_length: 1])
+  env_var(user, "USER", :string, [min_length: 1])
+  env_var(server, "SERVER", :string, [min_length: 1])
+  env_var(password, "PASSWORD", :string)
+  env_var(port, "PORT", :integer, [])
+  env_var(channels, "CHANNELS", :string_list, [min_length: 1])
+  env_var(plugins, "PLUGINS", :atom_list, [min_length: 0])
+
+  config :butler,
+    nickname: nickname,
+    user: user,
+    server: server,
+    password: password,
+    port: port,
+    channels:  channels,
+    plugins: plugins
+
+  # ----------------------------------------------------------------------------
   # Repo
 
   env_var(database_path, "DATABASE_PATH", :string)

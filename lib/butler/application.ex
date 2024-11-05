@@ -17,7 +17,8 @@ defmodule Butler.Application do
       # Start a worker by calling: Butler.Worker.start_link(arg)
       # {Butler.Worker, arg},
       # Start to serve requests, typically the last entry
-      ButlerWeb.Endpoint
+      ButlerWeb.Endpoint,
+      Butler.Irc.Connection
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

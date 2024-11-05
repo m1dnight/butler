@@ -1,6 +1,19 @@
 import Config
 
 # ----------------------------------------------------------------------------
+# Butler
+
+config :butler,
+  nickname: "Butler",
+  user: "butler",
+  version: "0.1.0",
+  server: "irc.libera.chat",
+  password: "",
+  port: 6667,
+  channels: ["#ircois"],
+  plugins: [Butler.Plugins.Karma, Butler.Plugins.Help, Butler.Plugins.Remember]
+
+# ----------------------------------------------------------------------------
 # Repo
 
 config :butler, Butler.Repo, database: ".db/butler.db"
