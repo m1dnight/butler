@@ -1,5 +1,8 @@
 import Config
 
+require EnvConfig
+import EnvConfig
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration
@@ -16,20 +19,15 @@ import Config
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
-if System.get_env("PHX_SERVER") do
-  config :butler, ButlerWeb.Endpoint, server: true
-end
+
+env_var(phx_server, "PHX_SERVER", :boolean, [], "false")
+config :butler, ButlerWeb.Endpoint, server: phx_server
 
 if config_env() == :prod do
   # ----------------------------------------------------------------------------
   # Repo
 
-  database_path =
-    System.get_env("DATABASE_PATH") ||
-      raise """
-      environment variable DATABASE_PATH is missing.
-      For example: /tmp/database.sql
-      """
+  env_var(database_path, "DATABASE_PATH", :string)
 
   config :butler, Butler.Repo, database: database_path
 
@@ -41,17 +39,20 @@ if config_env() == :prod do
   # want to use a different value for prod and you most likely don't want
   # to check this value into version control, so we use an environment
   # variable instead.
-  secret_key_base =
-    System.get_env("SECRET_KEY_BASE") ||
-      raise """
-      environment variable SECRET_KEY_BASE is missing.
-      You can generate one by calling: mix phx.gen.secret
-      """
+  # secret_key_base =
+  #   System.get_env("SECRET_KEY_BASE") ||
+  #     raise """
+  #     environment variable SECRET_KEY_BASE is missing.
+  #     You can generate one by calling: mix phx.gen.secret
+  #     """
 
-  host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "4000")
+  env_var(secret_key_base, "SECRET_KEY_BASE", :string, min_length: 64)
+  env_var(host, "PHX_HOST", :string, [min_length: 1], "example.com")
+  env_var(port, "PORT", :integer, [], "4000")
 
-  config :butler, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  optional(dns_cluster_query, "DNS_CLUSTER_QUERY", :string)
+
+  config :butler, :dns_cluster_query, dns_cluster_query
 
   config :butler, ButlerWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
