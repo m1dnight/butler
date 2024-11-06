@@ -20,20 +20,20 @@ import EnvConfig
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 
-env_var(phx_server, "PHX_SERVER", :boolean, [], "false")
+env_var(phx_server, "PHX_SERVER", :boolean, [], "true")
 config :butler, ButlerWeb.Endpoint, server: phx_server
 
 if config_env() == :prod do
   # ----------------------------------------------------------------------------
   # Butler
 
-  env_var(nickname, "NICKNAME", :string, [min_length: 1])
-  env_var(user, "USER", :string, [min_length: 1])
-  env_var(server, "SERVER", :string, [min_length: 1])
+  env_var(nickname, "NICKNAME", :string, min_length: 1)
+  env_var(user, "USER", :string, min_length: 1)
+  env_var(server, "SERVER", :string, min_length: 1)
   env_var(password, "PASSWORD", :string)
   env_var(port, "PORT", :integer, [])
-  env_var(channels, "CHANNELS", :string_list, [min_length: 1])
-  env_var(plugins, "PLUGINS", :atom_list, [min_length: 0])
+  env_var(channels, "CHANNELS", :string_list, min_length: 1)
+  env_var(plugins, "PLUGINS", :atom_list, min_length: 0)
 
   config :butler,
     nickname: nickname,
@@ -41,7 +41,7 @@ if config_env() == :prod do
     server: server,
     password: password,
     port: port,
-    channels:  channels,
+    channels: channels,
     plugins: plugins
 
   # ----------------------------------------------------------------------------

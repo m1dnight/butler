@@ -62,7 +62,10 @@ defmodule Butler.MixProject do
       {:ecto_sqlite3, "~> 0.16"},
       {:env_config, git: "https://github.com/m1dnight/env_config.git"},
       {:exirc, "~> 2.0"},
-      {:typed_struct, "~> 0.3.0"}
+      {:typed_struct, "~> 0.3.0"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:weechat_parser, git: "https://github.com/m1dnight/weechat_parser"},
+      {:typed_ecto_schema, "~> 0.4.1", runtime: false}
     ]
   end
 

@@ -1,4 +1,7 @@
 defmodule Butler.Irc.MessageHandler do
+  @moduledoc """
+  Contains a basic message handler that prints log messages for various IRC messages.
+  """
   use GenServer
   require Logger
 
@@ -19,7 +22,7 @@ defmodule Butler.Irc.MessageHandler do
 
   # Somebody else joined a channel we are in.
   def handle_info({:joined, channel, user}, state) do
-    Logger.debug("#{user} joined #{channel}")
+    Logger.debug("#{inspect(user)} joined #{channel}")
     {:noreply, state}
   end
 

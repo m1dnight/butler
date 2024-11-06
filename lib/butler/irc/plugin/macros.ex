@@ -1,4 +1,7 @@
 defmodule Butler.Plugin.Macros do
+  @moduledoc """
+  Contains the macro definitions for the Butler plugin system.
+  """
   defmacro __using__(_options) do
     caller = __CALLER__.module
 
@@ -6,7 +9,7 @@ defmodule Butler.Plugin.Macros do
       require Logger
       import unquote(__MODULE__)
       alias unquote(caller)
-      use TypedStruct
+      use TypedEctoSchema
 
       Module.register_attribute(__MODULE__, :reactions, accumulate: true)
       Module.register_attribute(__MODULE__, :dms, accumulate: true)
@@ -25,11 +28,43 @@ defmodule Butler.Plugin.Macros do
     end
   end
 
+  #############################################################################
+  # Records
+
+  defmacro defrecord(opts, do: fields) do
+    caller_module = __CALLER__.module
+    {:__block__, [], field_entries} = fields
+
+    field_names = Enum.map(field_entries, fn {_, _, [name, _type]} -> name end)
+
+    quote do
+      @table_name unquote(opts[:table])
+
+      typed_schema unquote(opts[:table]) do
+        unquote(fields)
+      end
+
+      def changeset(record, attrs) do
+        record
+        |> Ecto.Changeset.cast(attrs, unquote(field_names))
+      end
+
+      def persist(record) do
+        struct(unquote(caller_module))
+        |> changeset(record)
+        |> Butler.Repo.insert()
+      end
+    end
+  end
+
+  #############################################################################
+  # State
+
   defmacro init_state(do: initial_state) do
     caller = __CALLER__.module
 
     quote do
-      def init() do
+      def init do
         if Butler.Storage.load_state(unquote(caller)) == nil do
           Butler.Storage.put_state(unquote(caller), unquote(initial_state))
         end
@@ -37,7 +72,19 @@ defmodule Butler.Plugin.Macros do
     end
   end
 
-  defmacro load_state() do
+  defmacro init_state(_opts, do: initial_state) do
+    caller = __CALLER__.module
+
+    quote do
+      def init do
+        if Butler.Storage.load_state(unquote(caller)) == nil do
+          Butler.Storage.put_state(unquote(caller), unquote(initial_state))
+        end
+      end
+    end
+  end
+
+  defmacro load_state do
     caller = __CALLER__.module
 
     quote do
@@ -56,6 +103,7 @@ defmodule Butler.Plugin.Macros do
 
   ##############################################################################
   # Define help string.
+
   defmacro help(do: body) do
     quote do
       def help do
@@ -66,6 +114,7 @@ defmodule Butler.Plugin.Macros do
 
   #############################################################################
   # React to nickname changes.
+
   defmacro rename(event_var, do: action_block) do
     quote do
       rename(unquote(event_var), [], do: unquote(action_block))
@@ -90,6 +139,7 @@ defmodule Butler.Plugin.Macros do
 
   #############################################################################
   # React to both dm's and public messages.
+
   defmacro hear(regex, event_var, do: action_block) do
     quote do
       dm(unquote(regex), unquote(event_var), do: unquote(action_block))
@@ -99,7 +149,7 @@ defmodule Butler.Plugin.Macros do
   end
 
   ##############################################################################
-  # dm reacts to an incoming private message.
+  # React to direct messages
 
   defmacro dm(regex, event_var, do: action_block) do
     quote do

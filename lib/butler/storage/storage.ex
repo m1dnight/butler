@@ -1,4 +1,7 @@
 defmodule Butler.Storage do
+  @moduledoc """
+  Defines functions to read/write state to the database.
+  """
   alias Butler.Repo
   import Ecto.Query
   alias Butler.Storage.KeyValue

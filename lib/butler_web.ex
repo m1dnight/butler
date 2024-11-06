@@ -43,7 +43,7 @@ defmodule ButlerWeb do
         layouts: [html: ButlerWeb.Layouts]
 
       import Plug.Conn
-      import ButlerWeb.Gettext
+      use Gettext, backend: ButlerWeb.Gettext
 
       unquote(verified_routes())
     end

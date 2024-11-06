@@ -1,5 +1,10 @@
 defmodule Butler.Plugins.Help do
+  @moduledoc """
+  The help plugin provides help for all loaded plugins.
+  """
   use Butler.Plugin.Macros
+
+  alias Butler.Plugin.Manager
 
   help do
     [
@@ -11,7 +16,7 @@ defmodule Butler.Plugins.Help do
   hear ~r/^[ \t]*,info\s(?<plugin>.+)[ \t]*/i, e do
     sub = e.captures["plugin"] |> String.downcase()
 
-    plugins = Butler.Plugin.Manager.registered_plugins()
+    plugins = Manager.registered_plugins()
 
     reply =
       plugins
@@ -22,7 +27,7 @@ defmodule Butler.Plugins.Help do
       |> Enum.zip(plugins)
       |> Enum.filter(&(sub == elem(&1, 0)))
       |> Enum.flat_map(fn {_, plugin} ->
-        Butler.Plugin.Manager.get_help(plugin)
+        Manager.get_help(plugin)
       end)
       |> Enum.map_join(" | ", fn {cmd, help} ->
         "#{cmd}: #{help}"
@@ -36,7 +41,7 @@ defmodule Butler.Plugins.Help do
   end
 
   hear ~r/^[ \t]*,help[ \t]*$/i, e do
-    plugins = Butler.Plugin.Manager.registered_plugins()
+    plugins = Manager.registered_plugins()
 
     human_readable =
       plugins

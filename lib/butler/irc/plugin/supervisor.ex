@@ -1,4 +1,7 @@
 defmodule Butler.Plugin.Supervisor do
+  @moduledoc """
+  Supervisor the plugins.
+  """
   use Supervisor
 
   alias Butler.Plugin.Runner

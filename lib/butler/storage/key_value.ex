@@ -1,4 +1,7 @@
 defmodule Butler.Storage.KeyValue do
+  @moduledoc """
+  Defines the schema for storing key-value pairs in the database.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

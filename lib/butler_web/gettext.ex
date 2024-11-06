@@ -20,5 +20,5 @@ defmodule ButlerWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :butler
+  use Gettext.Backend, otp_app: :butler_web
 end

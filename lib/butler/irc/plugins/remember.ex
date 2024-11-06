@@ -1,4 +1,8 @@
 defmodule Butler.Plugins.Remember do
+  @moduledoc """
+  The Remember plugin allows the bot to remember things for you.
+  It's like a database for keywords.
+  """
   use Butler.Plugin.Macros
 
   help do

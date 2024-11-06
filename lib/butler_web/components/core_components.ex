@@ -17,7 +17,7 @@ defmodule ButlerWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import ButlerWeb.Gettext
+  use Gettext, backend: ButlerWeb.Gettext
 
   @doc """
   Renders a modal.

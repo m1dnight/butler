@@ -1,4 +1,7 @@
 defmodule Butler.Irc.LoginHandler do
+  @moduledoc """
+  Handles the incoming login messages from the IRC server.
+  """
   use GenServer
   require Logger
 
@@ -11,7 +14,7 @@ defmodule Butler.Irc.LoginHandler do
     {:ok, {client, config}}
   end
 
-  def handle_info(:logged_in, state = {client, config}) do
+  def handle_info(:logged_in, {client, config} = state) do
     Logger.debug("Logged in to server")
 
     # Join all the channels defined in the config.

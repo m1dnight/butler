@@ -1,4 +1,7 @@
 defmodule Butler.Plugins.Karma do
+  @moduledoc """
+  The Karma plugin allows the bot to keep track of karma points for users.
+  """
   use Butler.Plugin.Macros
   require Logger
 
@@ -18,12 +21,13 @@ defmodule Butler.Plugins.Karma do
     %{}
   end
 
-  react ~r/[ \t]*(?<sub>[^\s]+)(?<op>\+\+|--)[ \t]*/, e do
+  react ~r/[ \t]*(?<sub>[a-zA-Z0-9\.]+)(?<op>\+\+|--)[ \t]*/, e do
     sub = e.captures["sub"]
     op = e.captures["op"]
+    IO.puts("bumped karma for #{sub} with #{op}")
 
     load_state()
-    |> Map.update(sub, 0, fn karma ->
+    |> Map.update(sub, 1, fn karma ->
       case op do
         "++" -> karma + 1
         "--" -> karma - 1
@@ -48,8 +52,7 @@ defmodule Butler.Plugins.Karma do
       |> Enum.into([])
       |> Enum.sort_by(&elem(&1, 1), :desc)
       |> Enum.take(15)
-      |> Enum.map(fn {k, v} -> "#{k}: #{v}" end)
-      |> Enum.join("\n")
+      |> Enum.map_join("\n", fn {k, v} -> "#{k}: #{v}" end)
 
     {:reply, "Karma top 15\n#{top}", e.state}
   end

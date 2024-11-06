@@ -1,4 +1,7 @@
 defmodule Butler.Irc.Connection do
+  @moduledoc """
+  Supervisor for the IRC connection.
+  """
   use Supervisor
 
   require Logger
@@ -10,7 +13,7 @@ defmodule Butler.Irc.Connection do
   @impl true
   def init(_args) do
     config = config()
-    Logger.debug "config: #{inspect config}"
+    Logger.debug("config: #{inspect(config)}")
 
     children = [
       %{id: ExIRC.Client, start: {ExIRC.Client, :start_link, [[], [name: ExIRC.Client]]}},
@@ -23,7 +26,7 @@ defmodule Butler.Irc.Connection do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  defp config() do
+  defp config do
     server = Application.get_env(:butler, :server)
     port = Application.get_env(:butler, :port)
     nickname = Application.get_env(:butler, :nickname)

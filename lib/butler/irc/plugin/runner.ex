@@ -1,7 +1,13 @@
 defmodule Butler.Plugin.Runner do
+  @moduledoc """
+  Defines the process that runs a plugin.
+  """
+
   use GenServer
   require Logger
-  alias __MODULE__
+
+  alias Butler.Plugin.Runner
+  alias Butler.Plugin.Manager
 
   defstruct module: nil, module_state: nil, client: nil, config: nil
 
@@ -29,7 +35,7 @@ defmodule Butler.Plugin.Runner do
         []
       end
 
-    Butler.Plugin.Manager.register(module, helps)
+    Manager.register(module, helps)
 
     # Listen to incoming messages from ExIRC.
     ExIRC.Client.add_handler(client, self())

@@ -1,4 +1,7 @@
 defmodule Butler.Irc.ConnectionHandler do
+  @moduledoc """
+  Contains logic to deal with the connection to the irc server.
+  """
   use GenServer
   require Logger
 

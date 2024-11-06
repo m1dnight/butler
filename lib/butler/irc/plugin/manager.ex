@@ -1,4 +1,7 @@
 defmodule Butler.Plugin.Manager do
+  @moduledoc """
+  Contains logic to manage the plugins.
+  """
   use GenServer
   require Logger
 
