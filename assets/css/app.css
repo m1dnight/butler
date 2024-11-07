@@ -3,3 +3,38 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+.row {
+    padding: 1rem;
+    flex-direction: row;
+    display: flex;
+}
+
+.panel {
+}
+
+.message {
+    display: flex;
+    flex-direction: row;
+}
+
+.message > .timestamp {
+    flex: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.message > .name {
+    flex: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 7rem;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-self: center;
+}
+
+.message > .content {
+    flex: auto;
+}
