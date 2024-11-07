@@ -23,7 +23,7 @@ defmodule Butler.Irc.Connection do
       {Butler.Plugin.Supervisor, [ExIRC.Client, config]}
     ]
 
-    Supervisor.init(children, strategy: :one_for_one)
+    Supervisor.init(children, strategy: :rest_for_one)
   end
 
   defp config do
