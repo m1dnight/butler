@@ -68,7 +68,7 @@ if config_env() == :prod do
 
   env_var(secret_key_base, "SECRET_KEY_BASE", :string, min_length: 64)
   env_var(host, "PHX_HOST", :string, [min_length: 1], "example.com")
-  env_var(port, "PORT", :integer, [], "4000")
+  env_var(port, "WEB_PORT", :integer, [], "4000")
 
   optional(dns_cluster_query, "DNS_CLUSTER_QUERY", :string)
 
