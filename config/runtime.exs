@@ -68,7 +68,7 @@ if config_env() == :prod do
 
   env_var(secret_key_base, "SECRET_KEY_BASE", :string, min_length: 64)
   env_var(host, "PHX_HOST", :string, [min_length: 1], "example.com")
-  env_var(port, "PORT", :integer, [], "4000")
+  env_var(web_port, "WEB_PORT", :integer, [], "4000")
 
   optional(dns_cluster_query, "DNS_CLUSTER_QUERY", :string)
 
@@ -82,7 +82,7 @@ if config_env() == :prod do
       # See the documentation on https://hexdocs.pm/bandit/Bandit.html#t:options/0
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: port
+      port: web_port
     ],
     secret_key_base: secret_key_base
 

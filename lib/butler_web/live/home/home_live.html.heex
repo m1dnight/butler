@@ -1,0 +1,53 @@
+<div>
+  <ButlerWeb.ChatLog.row>
+    <ButlerWeb.ChatLog.panel>
+      <%= for message <- @messages do %>
+        <ButlerWeb.ChatLog.message
+          sender={message.from}
+          content={message.content}
+          timestamp={message.inserted_at}
+        />
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+  </ButlerWeb.ChatLog.row>
+
+  <ButlerWeb.ChatLog.row>
+    <ButlerWeb.ChatLog.panel>
+      ✉️ Messages per day: <%= Float.round(@average_message_per_day, 2) %>
+    </ButlerWeb.ChatLog.panel>
+    <ButlerWeb.ChatLog.panel>
+      🕺 Users: <%= @known_users %>
+    </ButlerWeb.ChatLog.panel>
+    <ButlerWeb.ChatLog.panel>
+      📚 Average message length: <%= Float.round(@average_message_length, 2) %> chars
+    </ButlerWeb.ChatLog.panel>
+    <ButlerWeb.ChatLog.panel>
+      🗓️ Busiest day:
+      <%= if @most_active_day != nil do %>
+        <%= Timex.format!(elem(@most_active_day, 1), "{YYYY}-{0M}-{D}") %>
+      <% else %>
+        /
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+  </ButlerWeb.ChatLog.row>
+
+  <ButlerWeb.ChatLog.row>
+    <ButlerWeb.ChatLog.panel title="Karma Top">
+      <%= for {user, karma} <- @karmas_top do %>
+        <ButlerWeb.ChatLog.karma user={user} karma={karma} />
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+
+    <ButlerWeb.ChatLog.panel title="Karma Bottom">
+      <%= for {user, karma} <- @karmas_bottom do %>
+        <ButlerWeb.ChatLog.karma user={user} karma={karma} />
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+
+    <ButlerWeb.ChatLog.panel title="Most Active">
+      <%= for [user, count] <- @message_count do %>
+        <ButlerWeb.ChatLog.message_count user={user} count={count} />
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+  </ButlerWeb.ChatLog.row>
+</div>
