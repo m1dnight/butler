@@ -20,7 +20,7 @@ config :butler,
 # ----------------------------------------------------------------------------
 # Repo
 
-config :butler, Butler.Repo, database: ".db/butler.db"
+config :butler, Butler.Repo, database: ".db/.butlerdb"
 
 # ----------------------------------------------------------------------------
 # Endpoint
