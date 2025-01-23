@@ -1,0 +1,17 @@
+services:
+  butler:
+    image: m1dnight/butler:latest
+    environment:
+      - DEBUG=true
+      - NICKNAME=Butler
+      - USER=Butler
+      - SERVER=irc.libera.chat
+      - PASSWORD=""
+      - PORT=6667
+      - CHANNELS="#ircois"
+      - PLUGINS=Elixir.Butler.Plugins.Karma,Elixir.Butler.Plugins.Help,Elixir.Butler.Plugins.Remember
+      - DATABASE_PATH=".db/.butlerdb"
+      - SECRET_KEY_BASE="aejoowa0Aeriwo8oyeeng3ahnuaXieyeijahgh0ahv8gae8ioshee2dir1go0Aep"
+      - PHX_SERVER=true
+      - PHX_HOST="localhost"
+      - WEB_PORT=4000

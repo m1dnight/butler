@@ -1,7 +1,7 @@
 import Config
 
-require EnvConfig
-import EnvConfig
+require EnvConfig.Macros
+import EnvConfig.Macros
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -20,20 +20,19 @@ import EnvConfig
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 
-env_var(phx_server, "PHX_SERVER", :boolean, [], "true")
-config :butler, ButlerWeb.Endpoint, server: phx_server
-
 if config_env() == :prod do
+  phx_server = optional("PHX_SERVER", :boolean, false)
+  config :butler, ButlerWeb.Endpoint, server: phx_server
   # ----------------------------------------------------------------------------
   # Butler
 
-  env_var(nickname, "NICKNAME", :string, min_length: 1)
-  env_var(user, "USER", :string, min_length: 1)
-  env_var(server, "SERVER", :string, min_length: 1)
-  env_var(password, "PASSWORD", :string)
-  env_var(port, "PORT", :integer, [])
-  env_var(channels, "CHANNELS", :string_list, min_length: 1)
-  env_var(plugins, "PLUGINS", :atom_list, min_length: 0)
+  nickname = required("NICKNAME", :string, min_length: 1)
+  user = required("USER", :string, min_length: 1)
+  server = required("SERVER", :string, min_length: 1)
+  password = required("PASSWORD", :string)
+  port = required("PORT", :integer)
+  channels = required("CHANNELS", {:list, :string}, min_length: 1)
+  plugins = required("PLUGINS", {:list, :atom}, min_length: 0)
 
   config :butler,
     nickname: nickname,
@@ -47,9 +46,9 @@ if config_env() == :prod do
   # ----------------------------------------------------------------------------
   # Repo
 
-  env_var(database_path, "DATABASE_PATH", :string)
+  database_path = required("DATABASE_PATH", :string)
 
-  config :butler, Butler.Repo, database: database_path
+  config :butler, Butler.Repo, database: database_path, show_sensitive_data_on_connection_error: true
 
   # ----------------------------------------------------------------------------
   # Endpoint
@@ -66,13 +65,13 @@ if config_env() == :prod do
   #     You can generate one by calling: mix phx.gen.secret
   #     """
 
-  env_var(secret_key_base, "SECRET_KEY_BASE", :string, min_length: 64)
-  env_var(host, "PHX_HOST", :string, [min_length: 1], "example.com")
-  env_var(web_port, "WEB_PORT", :integer, [], "4000")
+  secret_key_base = required("SECRET_KEY_BASE", :string, min_length: 64)
+  host = required("PHX_HOST", :string, min_length: 1)
+  web_port = required("WEB_PORT", :integer)
 
-  optional(dns_cluster_query, "DNS_CLUSTER_QUERY", :string)
+  # dns_cluster_query = optional("DNS_CLUSTER_QUERY", :string)
 
-  config :butler, :dns_cluster_query, dns_cluster_query
+  # config :butler, :dns_cluster_query, dns_cluster_query
 
   config :butler, ButlerWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],

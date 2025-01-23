@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+whoami
+ls -la
+ls -la /db/
+# make path for db
+mkdir -p /db
+# create db file
+touch "${DATABASE_PATH}"
+ls -la /db/
+./butler eval Butler.Release.migrate
+
+
+PHX_SERVER=true exec ./butler start
