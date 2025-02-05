@@ -51,4 +51,16 @@
       <% end %>
     </ButlerWeb.ChatLog.panel>
   </ButlerWeb.ChatLog.row>
+
+  <ButlerWeb.ChatLog.row>
+    <ButlerWeb.ChatLog.panel title="Messags/day" width={1.0}>
+      <%= build_pointplot(@day_totals) %>
+    </ButlerWeb.ChatLog.panel>
+    <ButlerWeb.ChatLog.panel title="Messages/hour" width={1.0}>
+      <%= build_pointplot(@hour_totals) %>
+    </ButlerWeb.ChatLog.panel>
+    <ButlerWeb.ChatLog.panel title="Messages/month" width={1.0}>
+      <%= build_pointplot(@month_totals) %>
+    </ButlerWeb.ChatLog.panel>
+  </ButlerWeb.ChatLog.row>
 </div>

@@ -48,6 +48,38 @@ defmodule Butler.Data do
     Repo.one(q)
   end
 
+  def month_totals() do
+    from(m in Butler.Plugins.Logger,
+      select: %{day: fragment("STRFTIME('%m', ?)", m.inserted_at), count: count(m.id)},
+      group_by: fragment("STRFTIME('%m', ?)", m.inserted_at),
+      order_by: [asc: fragment("STRFTIME('%m', ?)", m.inserted_at)]
+    )
+    |> Repo.all()
+    |> Enum.map(fn %{count: c, day: day} -> %{count: c, day: day} end)
+  end
+
+  def day_totals(limit \\ 31) do
+    from(m in Butler.Plugins.Logger,
+      select: %{day: fragment("STRFTIME('%Y-%m-%d', ?)", m.inserted_at), count: count(m.id)},
+      group_by: fragment("STRFTIME('%Y-%m-%d', ?)", m.inserted_at),
+      order_by: [desc: fragment("STRFTIME('%Y-%m-%d', ?)", m.inserted_at)]
+    )
+    |> Repo.all()
+    |> Enum.map(fn %{count: c, day: day} -> %{count: c, day: day} end)
+    |> Enum.take(limit)
+    |> Enum.reverse()
+  end
+
+  def hour_totals() do
+    from(m in Butler.Plugins.Logger,
+      select: %{day: fragment("STRFTIME('%H', ?)", m.inserted_at), count: count(m.id)},
+      group_by: fragment("STRFTIME('%H', ?)", m.inserted_at),
+      order_by: [asc: fragment("STRFTIME('%H', ?)", m.inserted_at)]
+    )
+    |> Repo.all()
+    |> Enum.map(fn %{count: c, day: day} -> %{count: c, day: day} end)
+  end
+
   def known_users() do
     q =
       from m in Butler.Plugins.Logger,
