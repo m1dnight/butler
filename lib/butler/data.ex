@@ -1,4 +1,7 @@
 defmodule Butler.Data do
+  @moduledoc """
+  Defines helper functions to compute statistics over the historic chatlog.
+  """
   alias Butler.Repo
   import Ecto.Query
 

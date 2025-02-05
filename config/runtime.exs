@@ -48,7 +48,9 @@ if config_env() == :prod do
 
   database_path = required("DATABASE_PATH", :string)
 
-  config :butler, Butler.Repo, database: database_path, show_sensitive_data_on_connection_error: true
+  config :butler, Butler.Repo,
+    database: database_path,
+    show_sensitive_data_on_connection_error: true
 
   # ----------------------------------------------------------------------------
   # Endpoint
