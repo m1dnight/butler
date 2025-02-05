@@ -8,6 +8,7 @@ defmodule ButlerWeb.Router do
     plug :put_root_layout, html: {ButlerWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :auth
   end
 
   pipeline :api do
@@ -40,5 +41,12 @@ defmodule ButlerWeb.Router do
       live_dashboard "/dashboard", metrics: ButlerWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp auth(conn, _opts) do
+    Plug.BasicAuth.basic_auth(conn,
+      username: "butler",
+      password: Application.get_env(:butler, :webauth)
+    )
   end
 end

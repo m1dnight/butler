@@ -4,6 +4,7 @@ import Config
 # Butler
 
 config :butler,
+  web_auth: "joseoursavior",
   nickname: "ButlerDeveloper",
   user: "butler_dev",
   server: "irc.libera.chat",

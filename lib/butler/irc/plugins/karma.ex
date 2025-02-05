@@ -24,6 +24,7 @@ defmodule Butler.Plugins.Karma do
   react ~r/[ \t]*(?<sub>[a-zA-Z0-9\.]+)(?<op>\+\+|--)[ \t]*/, e do
     sub = e.captures["sub"]
     op = e.captures["op"]
+
     load_state()
     |> Map.update(sub, 1, fn karma ->
       case op do
