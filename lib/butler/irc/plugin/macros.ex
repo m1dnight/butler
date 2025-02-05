@@ -2,6 +2,8 @@ defmodule Butler.Plugin.Macros do
   @moduledoc """
   Contains the macro definitions for the Butler plugin system.
   """
+  alias Phoenix.PubSub
+
   defmacro __using__(_options) do
     caller = __CALLER__.module
 
@@ -13,6 +15,7 @@ defmodule Butler.Plugin.Macros do
 
       Module.register_attribute(__MODULE__, :reactions, accumulate: true)
       Module.register_attribute(__MODULE__, :dms, accumulate: true)
+      Module.register_attribute(__MODULE__, :observations, accumulate: true)
       Module.register_attribute(__MODULE__, :rename, accumulate: false)
       @before_compile unquote(__MODULE__)
     end
@@ -25,6 +28,8 @@ defmodule Butler.Plugin.Macros do
       def dms, do: @dms
 
       def rename, do: @rename
+
+      def observations, do: @observations
     end
   end
 
@@ -53,6 +58,13 @@ defmodule Butler.Plugin.Macros do
         struct(unquote(caller_module))
         |> changeset(record)
         |> Butler.Repo.insert()
+        |> tap(fn
+          {:ok, record} ->
+            PubSub.broadcast(Butler.PubSub, "plugin", record)
+
+          {:error, _err} ->
+            :noop
+        end)
       end
     end
   end
@@ -194,6 +206,38 @@ defmodule Butler.Plugin.Macros do
 
     quote do
       @reactions %{
+        regex: unquote(regex),
+        func: unquote(func_name),
+        opts: unquote(options),
+        module: __MODULE__
+      }
+
+      def unquote(func_name)(unquote(event_var)) do
+        unquote(action_block)
+      end
+    end
+  end
+
+  ##############################################################################
+  # Observe reacts to /me actions in a channel
+
+  defmacro observe(regex, event_var, do: action_block) do
+    quote do
+      def_observe(unquote(regex), unquote(event_var), [], do: unquote(action_block))
+    end
+  end
+
+  defmacro observe(regex, event_var, options, do: action_block) do
+    quote do
+      def_observe(unquote(regex), unquote(event_var), unquote(options), do: unquote(action_block))
+    end
+  end
+
+  defmacro def_observe(regex, event_var, options, do: action_block) do
+    func_name = "observed_#{inspect(regex)}" |> String.to_atom()
+
+    quote do
+      @observations %{
         regex: unquote(regex),
         func: unquote(func_name),
         opts: unquote(options),

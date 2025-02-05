@@ -1,4 +1,7 @@
 defmodule ButlerWeb.ChatLog do
+  @moduledoc """
+  Defines phoenix components to render the chatlog.
+  """
   use Phoenix.Component
 
   use Gettext, backend: ButlerWeb.Gettext
@@ -33,10 +36,11 @@ defmodule ButlerWeb.ChatLog do
   attr :sender, :string, required: true
   attr :timestamp, DateTime, required: true
   attr :content, :string, required: true
+  attr :is_action, :boolean, required: false, default: false
 
   def message(assigns) do
     ~H"""
-    <div class="message font-mono">
+    <div class={"message font-mono " <> if @is_action, do: "italic", else: ""}>
       <div class="timestamp mr-2 text-sm">
         <%= @timestamp |> DateTime.to_time() |> Time.truncate(:second) |> Time.to_iso8601() %>
       </div>
@@ -44,7 +48,7 @@ defmodule ButlerWeb.ChatLog do
         class="name mr-2"
         style={"color: ##{:crypto.hash(:md5, @sender) |> :binary.bin_to_list |> Enum.take(3) |> :binary.list_to_bin |> Base.encode16}"}
       >
-        <%= @sender %>
+        <%= if @is_action, do: "* ", else: "" %><%= @sender %>
       </div>
       <div class="content">
         <%= @content %>
@@ -66,8 +70,10 @@ defmodule ButlerWeb.ChatLog do
         _ -> "basis-full"
       end
 
+    assigns = assign(assigns, :class, class)
+
     ~H"""
-    <div class={"panel p-5 m-1 border-2 border-slate-100 rounded " <>  class}>
+    <div class={"panel p-5 m-1 border-2 border-slate-100 rounded " <>  @class}>
       <div class="title text-lg"><%= @title %></div>
       <%= render_slot(@inner_block) %>
     </div>

@@ -6,6 +6,7 @@
           sender={message.from}
           content={message.content}
           timestamp={message.inserted_at}
+          is_action={message.is_action}
         />
       <% end %>
     </ButlerWeb.ChatLog.panel>

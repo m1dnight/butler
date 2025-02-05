@@ -9,6 +9,7 @@ defmodule Butler.Plugins.Logger do
     field :content, :string
     field :channel, :string
     field :inserted_at, :utc_datetime
+    field :is_action, :boolean
   end
 
   help do
@@ -22,7 +23,22 @@ defmodule Butler.Plugins.Logger do
         from: e.from,
         content: e.message,
         channel: e.channel,
-        inserted_at: DateTime.utc_now()
+        inserted_at: DateTime.utc_now(),
+        is_action: false
+      })
+
+    {:noreply, e.state}
+  end
+
+  observe ~r/.*/, e do
+    # Log messages.
+    {:ok, _} =
+      persist(%{
+        from: e.from,
+        content: e.message,
+        channel: e.channel,
+        inserted_at: DateTime.utc_now(),
+        is_action: true
       })
 
     {:noreply, e.state}
