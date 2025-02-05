@@ -38,7 +38,7 @@ defmodule Butler.Data do
     Repo.all(q)
   end
 
-  def average_messages_per_day() do
+  def average_messages_per_day do
     count_per_day =
       from m in Butler.Plugins.Logger,
         select: %{count: count(m.id)},
@@ -48,7 +48,7 @@ defmodule Butler.Data do
     Repo.one(q)
   end
 
-  def month_totals() do
+  def month_totals do
     from(m in Butler.Plugins.Logger,
       select: %{day: fragment("STRFTIME('%m', ?)", m.inserted_at), count: count(m.id)},
       group_by: fragment("STRFTIME('%m', ?)", m.inserted_at),
@@ -70,7 +70,7 @@ defmodule Butler.Data do
     |> Enum.reverse()
   end
 
-  def hour_totals() do
+  def hour_totals do
     from(m in Butler.Plugins.Logger,
       select: %{day: fragment("STRFTIME('%H', ?)", m.inserted_at), count: count(m.id)},
       group_by: fragment("STRFTIME('%H', ?)", m.inserted_at),
@@ -80,7 +80,7 @@ defmodule Butler.Data do
     |> Enum.map(fn %{count: c, day: day} -> %{count: c, day: day} end)
   end
 
-  def known_users() do
+  def known_users do
     q =
       from m in Butler.Plugins.Logger,
         select: %{from: m.from},
@@ -89,7 +89,7 @@ defmodule Butler.Data do
     Repo.aggregate(q, :count, :from)
   end
 
-  def average_message_length() do
+  def average_message_length do
     q =
       from m in Butler.Plugins.Logger,
         select: avg(fragment("length(?)", m.content))
@@ -97,7 +97,7 @@ defmodule Butler.Data do
     Repo.one(q)
   end
 
-  def most_active_day() do
+  def most_active_day do
     count_per_day =
       from m in Butler.Plugins.Logger,
         select: %{count: count(m.id), day: fragment("STRFTIME('%d-%m-%Y', ?)", m.inserted_at)},
