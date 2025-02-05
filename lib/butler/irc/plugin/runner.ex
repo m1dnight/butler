@@ -6,8 +6,8 @@ defmodule Butler.Plugin.Runner do
   use GenServer
   require Logger
 
-  alias Butler.Plugin.Runner
   alias Butler.Plugin.Manager
+  alias Butler.Plugin.Runner
 
   defstruct module: nil, module_state: nil, client: nil, config: nil
 

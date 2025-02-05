@@ -34,9 +34,11 @@ defmodule Butler.Plugins.Remember do
     sub = e.captures["sub"]
 
     answer =
-      load_state()
-      |> Map.get(sub, "I don't know what '#{sub}' is.")
+      case Map.get(load_state(), sub) do
+        nil -> "I don't know what '#{sub}' is."
+        value -> "#{sub} is #{value}"
+      end
 
-    {:reply, "#{sub} is #{answer}", e.state}
+    {:reply, "#{answer}", e.state}
   end
 end
