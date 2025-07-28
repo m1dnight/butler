@@ -40,6 +40,9 @@ defmodule Butler.Plugins.Karma do
   react ~r/^,karma\sjavascript[ \t]*/i, e do
     {:reply, "'JavaScript' has -∞ karma points.", e.state}
   end
+  react ~r/^,karma\elixir[ \t]*/i, e do
+    {:reply, "'Elixir' has +∞ karma points. All praise Jo(s)e.", e.state}
+  end
 
   react ~r/^,karma\s(?<sub>.+)[ \t]*/i, e do
     karma =
