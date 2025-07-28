@@ -37,6 +37,10 @@ defmodule Butler.Plugins.Karma do
     {:noreply, e.state}
   end
 
+  react ~r/^,karma\sjavascript[ \t]*/i, e do
+    {:reply, "'JavaScript' has -∞ karma points.", e.state}
+  end
+
   react ~r/^,karma\s(?<sub>.+)[ \t]*/i, e do
     karma =
       load_state()
