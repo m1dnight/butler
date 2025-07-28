@@ -37,7 +37,7 @@ defmodule Butler.Plugins.Karma do
     {:noreply, e.state}
   end
 
-  react ~r/^,karma\s(?<sub>.+)/i, e do
+  react ~r/^,karma\s(?<sub>.+)[ \t]*/i, e do
     karma =
       load_state()
       |> Map.get(e.captures["sub"], 0)
