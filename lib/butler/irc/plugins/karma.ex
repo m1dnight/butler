@@ -37,19 +37,21 @@ defmodule Butler.Plugins.Karma do
     {:noreply, e.state}
   end
 
-  react ~r/^,karma\sjavascript[ \t]*/i, e do
-    {:reply, "'JavaScript' has -∞ karma points.", e.state}
-  end
-  react ~r/^,karma\elixir[ \t]*/i, e do
-    {:reply, "'Elixir' has +∞ karma points. All praise Jo(s)e.", e.state}
-  end
-
   react ~r/^,karma\s(?<sub>.+)[ \t]*/i, e do
-    karma =
-      load_state()
-      |> Map.get(e.captures["sub"], 0)
+    case String.downcase(e.captures["sub"]) do
+      "elixir" ->
+        {:reply, "'Elixir' has +∞ karma points. All praise Jo(s)e.", e.state}
 
-    {:reply, "'#{e.captures["sub"]}' has #{karma} karma points.", e.state}
+      "javascript" ->
+        {:reply, "'JavaScript' has NaN karma points.", e.state}
+
+      _ ->
+        karma =
+          load_state()
+          |> Map.get(e.captures["sub"], 0)
+
+        {:reply, "'#{e.captures["sub"]}' has #{karma} karma points.", e.state}
+    end
   end
 
   dm ~r/^[ \t]*,karmatop[ \t]*$/i, e do
