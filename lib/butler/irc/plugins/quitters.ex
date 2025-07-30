@@ -14,11 +14,20 @@ defmodule Butler.Plugins.Quitters do
   end
 
   join e do
+    seen? = last_seen(load_state(), e.nick) != nil
+
+    IO.inspect(e, label: "e")
     load_state()
     |> mark_joined(e.nick)
     |> put_state()
 
-    {:noreply, e.state}
+    if not seen? do
+      {:reply,
+       "Welcome to #elixir! If you have questions, please wait around a bit. It can take a few hours for people to see your message. All praise Jose.",
+       e.state}
+    else
+      {:noreply, e.state}
+    end
   end
 
   leave e do
@@ -67,6 +76,10 @@ defmodule Butler.Plugins.Quitters do
     )
   end
 
+  defp last_seen(state, user) do
+    get_in(state, ["joins", user])
+  end
+
   defp mark_left(state, user) do
     Map.update(
       state,
@@ -99,7 +112,7 @@ defmodule Butler.Plugins.Quitters do
          {:ok, left, _} <- DateTime.from_iso8601(left) do
       DateTime.diff(left, joined)
     else
-      _ -> nil
+      _ -> 1_000_000
     end
   end
 end
