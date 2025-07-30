@@ -14,6 +14,7 @@ config :butler,
   ecto_repos: [Butler.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+
 # ----------------------------------------------------------------------------
 # Endpoint
 

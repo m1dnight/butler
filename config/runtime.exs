@@ -25,7 +25,6 @@ if config_env() == :prod do
   config :butler, ButlerWeb.Endpoint, server: phx_server
   # ----------------------------------------------------------------------------
   # Butler
-  webauth = optional("WEBAUTH", :string, "joseoursavior")
   nickname = required("NICKNAME", :string, min_length: 1)
   user = required("USER", :string, min_length: 1)
   server = required("SERVER", :string, min_length: 1)
@@ -35,7 +34,6 @@ if config_env() == :prod do
   plugins = required("PLUGINS", {:list, :atom}, min_length: 0)
 
   config :butler,
-    webauth: webauth,
     nickname: nickname,
     user: user,
     server: server,

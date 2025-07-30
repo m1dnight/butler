@@ -30,4 +30,9 @@ defmodule Butler.Plugin.Supervisor do
 
     Supervisor.init(children, strategy: :one_for_all)
   end
+
+  def reload do
+    Process.whereis(__MODULE__)
+    |> Process.exit(:manual)
+  end
 end

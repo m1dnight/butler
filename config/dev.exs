@@ -12,12 +12,12 @@ config :butler,
   port: 6667,
   channels: ["#ircois"],
   plugins: [
-    Butler.Plugins.Quitters
-    # Butler.Plugins.Karma,
-    # Butler.Plugins.Help,
-    # Butler.Plugins.Remember,
-    # Butler.Plugins.Logger,
-    # Butler.Plugins.NickTracker
+    Butler.Plugins.Quitters,
+    Butler.Plugins.Karma,
+    Butler.Plugins.Help,
+    Butler.Plugins.Remember,
+    Butler.Plugins.Logger,
+    Butler.Plugins.NickTracker
   ]
 
 # ----------------------------------------------------------------------------

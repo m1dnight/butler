@@ -55,4 +55,16 @@ defmodule Butler.Plugins.Help do
 
     {:reply, help, e.state}
   end
+
+  hear ~r/^[ \t]*,url[ \t]*$/i, e do
+    token = ButlerWeb.Plugs.AccessToken.create_token()
+    resp = "#{ButlerWeb.Endpoint.url()}/?token=#{token}"
+    {:reply, resp, e.state}
+  end
+
+  # dm ~r/^[ \t]*,url[ \t]*$/i, e do
+  #   # token = ButlerWeb.Plugs.AccessToken.create_token()
+  #   # resp = "#{ButlerWeb.Endpoint.url()}/?token=#{token}"
+  #   # {:reply, resp, e.state}
+  # end
 end
