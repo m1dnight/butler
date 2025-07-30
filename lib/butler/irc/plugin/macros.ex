@@ -16,6 +16,8 @@ defmodule Butler.Plugin.Macros do
       Module.register_attribute(__MODULE__, :reactions, accumulate: true)
       Module.register_attribute(__MODULE__, :dms, accumulate: true)
       Module.register_attribute(__MODULE__, :observations, accumulate: true)
+      Module.register_attribute(__MODULE__, :joins, accumulate: true)
+      Module.register_attribute(__MODULE__, :leaves, accumulate: true)
       Module.register_attribute(__MODULE__, :rename, accumulate: false)
       @before_compile unquote(__MODULE__)
     end
@@ -30,6 +32,10 @@ defmodule Butler.Plugin.Macros do
       def rename, do: @rename
 
       def observations, do: @observations
+
+      def joins, do: @joins
+
+      def leaves, do: @leaves
     end
   end
 
@@ -138,6 +144,53 @@ defmodule Butler.Plugin.Macros do
 
     quote do
       @rename %{
+        func: unquote(func_name),
+        opts: unquote(options),
+        module: __MODULE__
+      }
+
+      def unquote(func_name)(unquote(event_var)) do
+        unquote(action_block)
+      end
+    end
+  end
+
+  #############################################################################
+  # Joins
+
+  defmacro join(event_var, do: action_block) do
+    quote do
+      join(unquote(event_var), [], do: unquote(action_block))
+    end
+  end
+
+  defmacro join(event_var, options, do: action_block) do
+    func_name = "join" |> String.to_atom()
+
+    quote do
+      @joins %{
+        func: unquote(func_name),
+        opts: unquote(options),
+        module: __MODULE__
+      }
+
+      def unquote(func_name)(unquote(event_var)) do
+        unquote(action_block)
+      end
+    end
+  end
+
+  defmacro leave(event_var, do: action_block) do
+    quote do
+      leave(unquote(event_var), [], do: unquote(action_block))
+    end
+  end
+
+  defmacro leave(event_var, options, do: action_block) do
+    func_name = "leave" |> String.to_atom()
+
+    quote do
+      @leaves %{
         func: unquote(func_name),
         opts: unquote(options),
         module: __MODULE__

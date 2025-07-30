@@ -13,8 +13,8 @@ defmodule ButlerWeb.ChatLog do
   def message_count(assigns) do
     ~H"""
     <div class="karma font-mono">
-      <div class="karma_user mr-2"><%= @user %></div>
-      <div class="karma_value"><%= @count %></div>
+      <div class="karma_user mr-2">{@user}</div>
+      <div class="karma_value">{@count}</div>
     </div>
     """
   end
@@ -26,8 +26,8 @@ defmodule ButlerWeb.ChatLog do
   def karma(assigns) do
     ~H"""
     <div class="karma font-mono">
-      <div class="karma_user mr-2"><%= @user %></div>
-      <div class="karma_value"><%= @karma %></div>
+      <div class="karma_user mr-2">{@user}</div>
+      <div class="karma_value">{@karma}</div>
     </div>
     """
   end
@@ -42,16 +42,16 @@ defmodule ButlerWeb.ChatLog do
     ~H"""
     <div class={"message font-mono " <> if @is_action, do: "italic", else: ""}>
       <div class="timestamp mr-2 text-sm">
-        <%= @timestamp |> DateTime.to_time() |> Time.truncate(:second) |> Time.to_iso8601() %>
+        {@timestamp |> DateTime.to_time() |> Time.truncate(:second) |> Time.to_iso8601()}
       </div>
       <div
         class="name mr-2"
         style={"color: ##{:crypto.hash(:md5, @sender) |> :binary.bin_to_list |> Enum.take(3) |> :binary.list_to_bin |> Base.encode16}"}
       >
-        <%= if @is_action, do: "* ", else: "" %><%= @sender %>
+        {if @is_action, do: "* ", else: ""}{@sender}
       </div>
       <div class="content">
-        <%= @content %>
+        {@content}
       </div>
     </div>
     """
@@ -74,8 +74,8 @@ defmodule ButlerWeb.ChatLog do
 
     ~H"""
     <div class={"panel p-5 m-1 border-2 border-slate-100 rounded " <>  @class}>
-      <div class="title text-lg"><%= @title %></div>
-      <%= render_slot(@inner_block) %>
+      <div class="title text-lg">{@title}</div>
+      {render_slot(@inner_block)}
     </div>
     """
   end
@@ -85,7 +85,7 @@ defmodule ButlerWeb.ChatLog do
   def row(assigns) do
     ~H"""
     <div class="row">
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </div>
     """
   end

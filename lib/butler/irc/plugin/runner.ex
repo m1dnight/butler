@@ -111,6 +111,33 @@ defmodule Butler.Plugin.Runner do
   end
 
   ##############################################################################
+  # Join/part
+
+  def handle_info({:joined, channel, user}, state) do
+    # Call the module its actions and accumulate the state.
+    state =
+      state.module.joins()
+      |> Enum.reduce(state, fn join, state ->
+        mod_state = execute_join(join, channel, user.nick, state)
+        %{state | module_state: mod_state}
+      end)
+
+    {:noreply, state}
+  end
+
+  def handle_info({:parted, channel, user}, state) do
+    # Call the module its actions and accumulate the state.
+    state =
+      state.module.leaves()
+      |> Enum.reduce(state, fn join, state ->
+        mod_state = execute_leave(join, channel, user.nick, state)
+        %{state | module_state: mod_state}
+      end)
+
+    {:noreply, state}
+  end
+
+  ##############################################################################
   # Catch-all.
 
   def handle_info(_m, state) do
@@ -119,6 +146,77 @@ defmodule Butler.Plugin.Runner do
 
   ##############################################################################
   # Helpers
+
+  # ----------------------------------------------------------------------------
+  # Handler for joins and parts
+
+  def execute_leave(leave, channel, nick, state) do
+    m = leave.module
+    f = leave.func
+    o = leave.opts
+
+    p = 1.0 - Keyword.get(o, :probability, 1.0)
+
+    if :rand.uniform() >= p do
+      event = %{
+        nick: nick,
+        channel: channel,
+        state: state.module_state,
+        config: state.config
+      }
+
+      case apply(m, f, [event]) do
+        {:noreply, mod_state} ->
+          mod_state
+
+        {:reply, response, mod_state} ->
+          lines = response |> String.split("\n") |> Enum.filter(&(&1 != ""))
+
+          for line <- lines do
+            ExIRC.Client.msg(state.client, :privmsg, channel, line)
+            Process.sleep(500)
+          end
+
+          mod_state
+
+        r ->
+          Logger.error(
+            "Response from leave in #{inspect(state.module)} is invalid!: #{inspect(r)}"
+          )
+      end
+    else
+      state.module_state
+    end
+  end
+
+  def execute_join(join, channel, nick, state) do
+    m = join.module
+    f = join.func
+    o = join.opts
+
+    p = 1.0 - Keyword.get(o, :probability, 1.0)
+
+    if :rand.uniform() >= p do
+      event = %{
+        nick: nick,
+        channel: channel,
+        state: state.module_state,
+        config: state.config
+      }
+
+      case apply(m, f, [event]) do
+        {:noreply, mod_state} ->
+          mod_state
+
+        r ->
+          Logger.error(
+            "Response from join in #{inspect(state.module)} is invalid!: #{inspect(r)}"
+          )
+      end
+    else
+      state.module_state
+    end
+  end
 
   # ----------------------------------------------------------------------------
   # Handler for nick changes.

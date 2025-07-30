@@ -14,18 +14,18 @@
 
   <ButlerWeb.ChatLog.row>
     <ButlerWeb.ChatLog.panel>
-      ✉️ Messages per day: <%= Float.round(@average_message_per_day, 2) %>
+      ✉️ Messages per day: {Float.round(@average_message_per_day, 2)}
     </ButlerWeb.ChatLog.panel>
     <ButlerWeb.ChatLog.panel>
-      🕺 Users: <%= @known_users %>
+      🕺 Users: {@known_users}
     </ButlerWeb.ChatLog.panel>
     <ButlerWeb.ChatLog.panel>
-      📚 Average message length: <%= Float.round(@average_message_length, 2) %> chars
+      📚 Average message length: {Float.round(@average_message_length, 2)} chars
     </ButlerWeb.ChatLog.panel>
     <ButlerWeb.ChatLog.panel>
       🗓️ Busiest day:
       <%= if @most_active_day != nil do %>
-        <%= Timex.format!(elem(@most_active_day, 1), "{YYYY}-{0M}-{D}") %>
+        {Timex.format!(elem(@most_active_day, 1), "{YYYY}-{0M}-{D}")}
       <% else %>
         /
       <% end %>
@@ -54,13 +54,13 @@
 
   <ButlerWeb.ChatLog.row>
     <ButlerWeb.ChatLog.panel title="Messags/day" width={1.0}>
-      <%= build_pointplot(@day_totals) %>
+      {build_pointplot(@day_totals)}
     </ButlerWeb.ChatLog.panel>
     <ButlerWeb.ChatLog.panel title="Messages/hour" width={1.0}>
-      <%= build_pointplot(@hour_totals) %>
+      {build_pointplot(@hour_totals)}
     </ButlerWeb.ChatLog.panel>
     <ButlerWeb.ChatLog.panel title="Messages/month" width={1.0}>
-      <%= build_pointplot(@month_totals) %>
+      {build_pointplot(@month_totals)}
     </ButlerWeb.ChatLog.panel>
   </ButlerWeb.ChatLog.row>
 </div>
