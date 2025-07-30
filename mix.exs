@@ -59,7 +59,7 @@ defmodule Butler.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:ecto_sqlite3, "~> 0.16"},
+      {:ecto_sqlite3, "~> 0.17.3"},
       {:env_config, git: "https://github.com/m1dnight/env_config", branch: "develop"},
       {:exirc, "~> 2.0"},
       {:typed_struct, "~> 0.3.0"},
