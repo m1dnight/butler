@@ -16,18 +16,17 @@ defmodule Butler.Plugins.Quitters do
   join e do
     seen? = last_seen(load_state(), e.nick) != nil
 
-    IO.inspect(e, label: "e")
     load_state()
     |> mark_joined(e.nick)
     |> put_state()
 
-    if not seen? do
-      {:reply,
-       "Welcome to #elixir! If you have questions, please wait around a bit. It can take a few hours for people to see your message. All praise Jose.",
-       e.state}
-    else
+    # if not seen? do
+      # {:reply,
+      #  "Welcome to #elixir! If you have questions, please wait around a bit. It can take a few hours for people to see your message. All praise Jose.",
+      #  e.state}
+    # else
       {:noreply, e.state}
-    end
+    # end
   end
 
   leave e do
