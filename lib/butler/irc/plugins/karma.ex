@@ -37,7 +37,7 @@ defmodule Butler.Plugins.Karma do
     {:noreply, e.state}
   end
 
-  react ~r/^,karma\s(?<sub>.+)[ \t]*/i, e do
+  react ~r/^,karma\s(?<sub>[^\s\t]+)/i, e do
     case String.downcase(e.captures["sub"]) do
       "elixir" ->
         {:reply, "'Elixir' has +∞ karma points. All praise Jo(s)e.", e.state}
