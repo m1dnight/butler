@@ -19,6 +19,8 @@ defmodule Butler.Plugin.Macros do
       Module.register_attribute(__MODULE__, :joins, accumulate: true)
       Module.register_attribute(__MODULE__, :leaves, accumulate: true)
       Module.register_attribute(__MODULE__, :rename, accumulate: false)
+      Module.register_attribute(__MODULE__, :trigger, accumulate: false)
+
       @before_compile unquote(__MODULE__)
     end
   end
@@ -36,6 +38,10 @@ defmodule Butler.Plugin.Macros do
       def joins, do: @joins
 
       def leaves, do: @leaves
+
+      if @trigger != nil do
+        def trigger, do: @trigger
+      end
     end
   end
 
@@ -116,6 +122,19 @@ defmodule Butler.Plugin.Macros do
 
     quote do
       Butler.Storage.put_state(unquote(caller), unquote(state))
+    end
+  end
+
+  ##############################################################################
+  # Trigger handler
+
+  defmacro trigger(event_var, do: action_block) do
+    func_name = "trigger" |> String.to_atom()
+
+    quote do
+      def unquote(func_name)(unquote(event_var)) do
+        unquote(action_block)
+      end
     end
   end
 

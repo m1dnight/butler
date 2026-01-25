@@ -14,18 +14,18 @@ defmodule Butler.Plugins.Quitters do
   end
 
   join e do
-    seen? = last_seen(load_state(), e.nick) != nil
+    #seen? = last_seen(load_state(), e.nick) != nil
 
     load_state()
     |> mark_joined(e.nick)
     |> put_state()
 
     # if not seen? do
-      # {:reply,
-      #  "Welcome to #elixir! If you have questions, please wait around a bit. It can take a few hours for people to see your message. All praise Jose.",
-      #  e.state}
+    # {:reply,
+    #  "Welcome to #elixir! If you have questions, please wait around a bit. It can take a few hours for people to see your message. All praise Jose.",
+    #  e.state}
     # else
-      {:noreply, e.state}
+    {:noreply, e.state}
     # end
   end
 
@@ -35,7 +35,7 @@ defmodule Butler.Plugins.Quitters do
     |> mark_left(e.nick)
     |> put_state()
 
-    state = load_state()
+    # state = load_state()
 
     # get the current shortest stay, if there is one
     record = shortest_stay(load_state())

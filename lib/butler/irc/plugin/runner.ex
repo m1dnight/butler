@@ -48,9 +48,24 @@ defmodule Butler.Plugin.Runner do
         nil
       end
 
+    # If the plugin has a trigger, start pinging it.
+    if Keyword.has_key?(module.__info__(:functions), :trigger) do
+      Process.send_after(self(), :trigger, module.trigger())
+    end
+
     # Initial runner state.
     state = %Runner{module: module, client: client, config: config, module_state: mod_state}
     {:ok, state}
+  end
+
+  #############################################################################
+  # Trigger
+
+  def handle_info(:trigger, state) do
+    Process.send_after(self(), :trigger, state.module.trigger())
+
+    # Call the module its actions and accumulate the state.
+    {:noreply, %{state | module_state: execute_trigger(state)}}
   end
 
   #############################################################################
@@ -400,6 +415,40 @@ defmodule Butler.Plugin.Runner do
       end
     else
       state.module_state
+    end
+  end
+
+  # ----------------------------------------------------------------------------
+  # Handler for trigger actions
+
+  def execute_trigger(state) do
+    # all channels this plugin is active on
+    channels = state.config.channels
+
+    event = %{
+      state: state.module_state,
+      config: state.config
+    }
+
+    # call the trigger callback in the plugin
+    case apply(state.module, :trigger, [event]) do
+      {:noreply, mod_state} ->
+        mod_state
+
+      {:reply, response, mod_state} ->
+        lines = response |> String.split("\n") |> Enum.filter(&(&1 != ""))
+
+        for line <- lines do
+          for channel <- channels do
+            ExIRC.Client.msg(state.client, :privmsg, channel, line)
+            Process.sleep(500)
+          end
+        end
+
+        mod_state
+
+      _ ->
+        Logger.error("Response from trigger in #{inspect(state.module)} is invalid!")
     end
   end
 end

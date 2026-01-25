@@ -66,7 +66,9 @@ defmodule Butler.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:weechat_parser, git: "https://github.com/m1dnight/weechat_parser"},
       {:typed_ecto_schema, "~> 0.4.1", runtime: false},
-      {:contex, "~> 0.5.0"}
+      {:contex, "~> 0.5.0"},
+      {:httpoison, "~> 2.0"},
+      {:sweet_xml, "~> 0.7"}
     ]
   end
 
