@@ -38,6 +38,27 @@ defmodule Butler.Data do
     Repo.all(q)
   end
 
+  @doc """
+  Search all messages that contain a URL
+  `select * from messages where content REGEXP  'https.*';`
+  """
+  def urls(n \\ 10) do
+    urls =
+      from m in Butler.Plugins.Logger,
+        where: like(m.content, "%http%"),
+        order_by: [desc: m.inserted_at],
+        limit: ^n
+
+    Repo.all(urls)
+    |> Enum.map(fn message ->
+      case Regex.scan(~r/(https:|http:|www\.)\S*/, message.content) do
+        [[url | _] | _] -> {message.inserted_at, url}
+        _ -> []
+      end
+    end)
+    |> Enum.reject(&(&1 == []))
+  end
+
   def average_messages_per_day do
     count_per_day =
       from m in Butler.Plugins.Logger,

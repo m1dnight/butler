@@ -89,4 +89,22 @@ defmodule ButlerWeb.ChatLog do
     </div>
     """
   end
+
+  attr :id, :string
+  attr :timestamp, DateTime, required: true
+  attr :url, :string, required: true
+  attr :is_action, :boolean, required: false, default: false
+
+  def url(assigns) do
+    ~H"""
+    <div class={"message font-mono " <> if @is_action, do: "italic", else: ""}>
+      <div class="timestamp mr-2 text-sm">
+        {@timestamp |> DateTime.to_string()}
+      </div>
+      <div class="content">
+        <a href={@url}>{@url}</a>
+      </div>
+    </div>
+    """
+  end
 end

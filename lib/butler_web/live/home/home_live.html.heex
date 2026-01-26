@@ -63,4 +63,12 @@
       {build_pointplot(@month_totals)}
     </ButlerWeb.ChatLog.panel>
   </ButlerWeb.ChatLog.row>
+
+  <ButlerWeb.ChatLog.row>
+    <ButlerWeb.ChatLog.panel title="Recent URLs" width={1.0}>
+      <%= for {date, url} <- Butler.Data.urls(20) do %>
+        <ButlerWeb.ChatLog.url timestamp={date} url={url} />
+      <% end %>
+    </ButlerWeb.ChatLog.panel>
+  </ButlerWeb.ChatLog.row>
 </div>

@@ -14,7 +14,7 @@ defmodule Butler.Plugins.Quitters do
   end
 
   join e do
-    #seen? = last_seen(load_state(), e.nick) != nil
+    # seen? = last_seen(load_state(), e.nick) != nil
 
     load_state()
     |> mark_joined(e.nick)

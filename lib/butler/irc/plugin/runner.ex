@@ -222,6 +222,7 @@ defmodule Butler.Plugin.Runner do
       case apply(m, f, [event]) do
         {:noreply, mod_state} ->
           mod_state
+
         {:reply, response, mod_state} ->
           lines = response |> String.split("\n") |> Enum.filter(&(&1 != ""))
 
@@ -231,6 +232,7 @@ defmodule Butler.Plugin.Runner do
           end
 
           mod_state
+
         r ->
           Logger.error(
             "Response from join in #{inspect(state.module)} is invalid!: #{inspect(r)}"
