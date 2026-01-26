@@ -84,7 +84,7 @@ defmodule ButlerWeb.ChatLog do
 
   def row(assigns) do
     ~H"""
-    <div class="row">
+    <div class="row auto-grid">
       {render_slot(@inner_block)}
     </div>
     """

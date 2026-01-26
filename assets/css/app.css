@@ -9,14 +9,29 @@
   display: flex;
 }
 
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: #e74c3c;
+  padding: 30px;
+  color: white;
+  border-radius: 8px;
+}
+
+
 .panel {
   display: flex;
   flex-direction: column;
 }
 
 .panel > .title {
-    text-align: center;
-  }
+  text-align: center;
+}
 
 /* Messages */
 .message {
