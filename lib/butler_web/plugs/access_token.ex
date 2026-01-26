@@ -10,19 +10,23 @@ defmodule ButlerWeb.Plugs.AccessToken do
     options
   end
 
-  def call(conn, _opts) do
-    init_table()
+  if Mix.env() == :dev do
+    def call(conn, _opts), do: conn
+  else
+    def call(conn, _opts) do
+      init_table()
 
-    case conn.params do
-      %{"token" => token} ->
-        if valid_token?(token) do
-          conn
-        else
+      case conn.params do
+        %{"token" => token} ->
+          if valid_token?(token) do
+            conn
+          else
+            unauthorized(conn)
+          end
+
+        _ ->
           unauthorized(conn)
-        end
-
-      _ ->
-        unauthorized(conn)
+      end
     end
   end
 
