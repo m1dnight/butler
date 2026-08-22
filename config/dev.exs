@@ -18,7 +18,8 @@ config :butler,
     Butler.Plugins.Remember,
     Butler.Plugins.Logger,
     Butler.Plugins.NickTracker,
-    Butler.Plugins.RSS
+    Butler.Plugins.RSS,
+    Butler.Plugins.HexDocs
   ]
 
 # ----------------------------------------------------------------------------
