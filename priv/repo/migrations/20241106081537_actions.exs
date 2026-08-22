@@ -1,4 +1,4 @@
-defmodule Butler.Repo.Migrations.Messages do
+defmodule Butler.Repo.Migrations.ActionsUpdate do
   use Ecto.Migration
 
   def change do
