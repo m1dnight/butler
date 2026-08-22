@@ -34,7 +34,11 @@ defmodule Butler.Plugins.Karma do
     end)
     |> put_state()
 
-    {:noreply, e.state}
+    new_karma =
+      load_state()
+      |> Map.get(sub, 0)
+
+    {:reply, "#{sub} has #{new_karma} karma points.", e.state}
   end
 
   react ~r/^,karma\s(?<sub>[^\s\t]+)/i, e do
